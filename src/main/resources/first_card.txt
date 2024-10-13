@@ -1,0 +1,11 @@
+BASIC
+Cubchoo
+60
+WATER
+Beartic
+[Water] / Chilly / 20
+FIGHTINGx2
+-
+[Colorless]
+SWSH09
+E

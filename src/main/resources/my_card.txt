@@ -1,0 +1,12 @@
+STAGE1
+Beartic
+140
+WATER
+src/main/resources/first_card.txt
+[Water][Colorless][Colorless] / Sheer Cold / 40, [Water][Water][Colorless][Colorless] / Frost Smash / 130
+FIGHTINGx2
+-
+[Colorless][Colorless][Colorless]
+043/172
+E
+Паньшин / Дмитрий / Игоревич / БСБО-05-23
