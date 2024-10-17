@@ -2,7 +2,7 @@ STAGE1
 Beartic
 140
 WATER
-src/main/resources/first_card.txt
+src/main/resources/evo.txt
 [Water][Colorless][Colorless] / Sheer Cold / 40, [Water][Water][Colorless][Colorless] / Frost Smash / 130
 FIGHTINGx2
 -

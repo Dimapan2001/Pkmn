@@ -15,26 +15,27 @@ public class PkmnApplication {
         // Читаем ссылку на первую карту из пятого пункта
         String firstCardFilePath = readLinkFromMainCard("src/main/resources/my_card.txt");
         if (firstCardFilePath != null) {
-            System.out.println("Cubchoo:");
+            System.out.println("Evo:");
             loadCard(importer, firstCardFilePath);
         } else {
             System.out.println("Ссылка на первый файл не найдена.");
         }
 
         System.out.println("\nимпорт карта:");
-        loadCardFromBinary("src/main/resources/Morpeko.crd");
+        loadCardFromBinary("src/main/resources/Grimmsnarl.crd");
     }
 
     private static Card loadCard(CardImport importer, String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
-            System.err.println("Файл не найден: " + filePath);
+            System.err.println("" + filePath);
             return null;
         }
         Card card = importer.importCards(filePath);
         if (card != null) {
             System.out.println(card);
             saveCardToBinary(card);
+            System.out.println();
         }
         return card;
     }
