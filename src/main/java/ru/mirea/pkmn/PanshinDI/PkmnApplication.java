@@ -1,4 +1,6 @@
-package ru.mirea.pkmn;
+package ru.mirea.pkmn.PanshinDI;
+
+import ru.mirea.pkmn.Card;
 
 import java.io.*;
 
@@ -7,14 +9,11 @@ public class PkmnApplication {
     public static void main(String[] args) {
         CardImport importer = new CardImport();
 
-        // 1. Импортируем и обрабатываем основную карту (my_card.txt)
         System.out.println("Beartic:");
         Card mainCard = loadCard(importer, "src/main/resources/my_card.txt");
 
-        // 2. Читаем ссылку на первую карту из пятого пункта
+        // Читаем ссылку на первую карту из пятого пункта
         String firstCardFilePath = readLinkFromMainCard("src/main/resources/my_card.txt");
-
-        // 3. Импортируем и обрабатываем первую карту, если она указана
         if (firstCardFilePath != null) {
             System.out.println("Cubchoo:");
             loadCard(importer, firstCardFilePath);
@@ -22,41 +21,46 @@ public class PkmnApplication {
             System.out.println("Ссылка на первый файл не найдена.");
         }
 
-        // 4. Импортируем и обрабатываем карту из добавленного бинарного файла
-        System.out.println("\nИмпортируемая карта:");
-        loadCardFromBinary("src/main/resources/Morpeko.crd"); // Укажите путь к бинарному файлу
+        System.out.println("\nимпорт карта:");
+        loadCardFromBinary("src/main/resources/Morpeko.crd");
     }
 
-    // Метод для импорта карты, вывода и сохранения в бинарный файл
     private static Card loadCard(CardImport importer, String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.err.println("Файл не найден: " + filePath);
+            return null;
+        }
         Card card = importer.importCards(filePath);
         if (card != null) {
-            System.out.println(card);  // Вывод полной информации о карте
-            saveCardToBinary(card);    // Сохраняем карту в бинарный файл
+            System.out.println(card);
+            saveCardToBinary(card);
         }
         return card;
     }
 
-    // Метод для сохранения карты в бинарный файл
     private static void saveCardToBinary(Card card) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(card.getName() + ".crd"))) {
-            oos.writeObject(card);  // Сохраняем объект карты в файл
+            oos.writeObject(card);
         } catch (IOException e) {
             System.err.println("Ошибка при сохранении карты в бинарный файл: " + e.getMessage());
         }
     }
 
-    // Метод для чтения карты из бинарного файла
     private static void loadCardFromBinary(String fileName) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.err.println("Файл не найден: " + fileName);
+            return;
+        }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            Card card = (Card) ois.readObject();  // Чтение объекта карты из бинарного файла
-            System.out.println(card);  // Вывод полной информации о карте
+            Card card = (Card) ois.readObject();
+            System.out.println(card);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Ошибка при чтении карты из бинарного файла: " + e.getMessage());
         }
     }
 
-    // Метод для чтения ссылки на первый файл из пятого пункта
     private static String readLinkFromMainCard(String filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;

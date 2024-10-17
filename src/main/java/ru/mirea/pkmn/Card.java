@@ -139,7 +139,7 @@ public class Card implements Serializable {
                 ", name='" + name + '\'' +
                 ", hp=" + hp +
                 ", pokemonType=" + pokemonType +
-                ", evolvesFrom=" + (evolvesFrom != null ? evolvesFrom.getName() : "-") +
+                ", evolvesFrom=" +  evolvesFrom +
                 ", skills=" + skills +
                 ", weaknessType=" + weaknessType +
                 ", weaknessMultiplier=" + weaknessMultiplier +
