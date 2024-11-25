@@ -1,11 +1,13 @@
-BASIC
-Cubchoo
-60
-WATER
-Beartic
-[Water] / Chilly / 20
-FIGHTINGx2
--
-[Colorless]
-SWSH09
-E
+1. BASIC
+2. Cubchoo
+3. 60
+4. WATER
+5. -
+6. [Water] / Chilly / 20
+7. FIGHTING
+8. -
+9. [Colorless]
+10.  Brilliant Stars
+11. E
+12.-
+13. 42

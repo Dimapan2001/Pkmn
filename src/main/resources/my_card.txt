@@ -1,12 +1,13 @@
-STAGE1
-Beartic
-140
-WATER
-src/main/resources/evo.txt
-[Water][Colorless][Colorless] / Sheer Cold / 40, [Water][Water][Colorless][Colorless] / Frost Smash / 130
-FIGHTINGx2
--
-[Colorless][Colorless][Colorless]
-043/172
-E
-Паньшин / Дмитрий / Игоревич / БСБО-05-23
+1. STAGE1
+2. Beartic
+3. 140
+4. WATER
+5. src/main/resources/evo.txt
+6. [Water][Colorless][Colorless] / Sheer Cold / 40, [Water][Water][Colorless][Colorless] / Frost Smash / 130
+7. FIGHTING
+8. -
+9. 3
+10.  Brilliant Stars
+11. E
+12. Паньшин / Дмитрий / Игоревич / БСБО-05-23
+13. 43

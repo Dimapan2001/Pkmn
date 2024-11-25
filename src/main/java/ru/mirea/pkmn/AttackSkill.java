@@ -2,15 +2,13 @@ package ru.mirea.pkmn;
 
 import java.io.Serializable;
 
-public class AttackSkill implements Serializable {
-
+public class AttackSkill  implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String name; // Имя атаки
-    private String description; // Описание атаки
-    private String cost; // Стоимость атаки
-    private int damage; // Урон атаки
+    private String name;
+    private String description;
+    private String cost;
+    private int damage;
 
-    // Конструктор
     public AttackSkill(String name, String description, String cost, int damage) {
         this.name = name;
         this.description = description;
@@ -18,7 +16,11 @@ public class AttackSkill implements Serializable {
         this.damage = damage;
     }
 
-    // Геттеры и сеттеры
+    @Override
+    public String toString() {
+        return cost + " / " + name + " / " + damage + (!description.isEmpty() ? " / " + description:"");
+    }
+
     public String getName() {
         return name;
     }
@@ -49,11 +51,5 @@ public class AttackSkill implements Serializable {
 
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    // Метод для вывода информации об атаке
-    @Override
-    public String toString() {
-        return String.format("%s / %s / %d", cost, name, damage);
     }
 }

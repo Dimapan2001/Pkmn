@@ -1,79 +1,104 @@
 package ru.mirea.pkmn.PanshinDI;
 
 import ru.mirea.pkmn.Card;
+import ru.mirea.pkmn.AttackSkill;
+import com.fasterxml.jackson.databind.JsonNode;
+import ru.mirea.pkmn.PanshinDI.web.http.PkmnHttpClient;
+import ru.mirea.pkmn.PanshinDI.web.jdbc.DatabaseServiceImpl;
 
-import java.io.*;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PkmnApplication {
+    public static void main(String[] args) throws IOException, SQLException {
 
-    public static void main(String[] args) {
-        CardImport importer = new CardImport();
+        Card card = new Card();
+        Scanner scanner = new Scanner(System.in);
+        DatabaseServiceImpl db = new DatabaseServiceImpl();
+        boolean flag = true;
 
-        System.out.println("Beartic:");
-        Card mainCard = loadCard(importer, "src/main/resources/my_card.txt");
+        System.out.println("Выберите действие:");
+        System.out.println("0 - Выход");
+        System.out.println("1 - Импорт из текстового файла");
+        System.out.println("2 - Импорт из бинарного файла");
+        System.out.println("3 - Экспорт в бинарный файл");
+        System.out.println("4 - Парсинг описаний умений (Задание 4.1)");
+        System.out.println("5 - Сохранение карточки в бд (Задание 4.2)");
+        System.out.println("6 - Проверяем карточки в бд без добавления (Задание 4.2)");
 
-        // Читаем ссылку на первую карту из пятого пункта
-        String firstCardFilePath = readLinkFromMainCard("src/main/resources/my_card.txt");
-        if (firstCardFilePath != null) {
-            System.out.println("Evo:");
-            loadCard(importer, firstCardFilePath);
-        } else {
-            System.out.println("Ссылка на первый файл не найдена.");
+        db.getCardFromDatabase("Beartic");
+        System.out.println(db.getStudentIdFromDatabase("Паньшин Дмитрий Игоревич"));
+
+        while (flag) {
+            switch (scanner.nextInt()) {
+                case 0:
+                    flag = false;
+                    break;
+
+                case 1:
+                    card = CardImport.importCard("src/main/resources/my_card.txt");
+                    System.out.println(card);
+                    break;
+
+                case 2:
+                    card = CardImport.importCardByte("Beartic.crd");
+                    System.out.println(card);
+                    break;
+
+                case 3:
+                    CardExport.exportCard(card);
+                    break;
+
+                case 4:
+                    card = CardImport.importCard("src/main/resources/my_card.txt");
+                    System.out.println(card);
+                    updateSkills(card);
+                    System.out.println(card);
+                    break;
+
+                case 5:
+                    card = CardImport.importCard("src/main/resources/my_card.txt");
+                    updateSkills(card, false);
+                    db.saveCardToDatabase(card);
+                    System.out.println(db.getCardFromDatabase(card.getName()));
+                    break;
+
+                case 6:
+                    card = CardImport.importCard("src/main/resources/my_card.txt");
+                    System.out.println(db.getCardFromDatabase(card.getName()));
+                    break;
+
+            }
         }
-
-        System.out.println("\nимпорт карта:");
-        loadCardFromBinary("src/main/resources/Grimmsnarl.crd");
+    }
+    public static void updateSkills(Card card) throws IOException {
+        updateSkills(card, true);
     }
 
-    private static Card loadCard(CardImport importer, String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            System.err.println("" + filePath);
-            return null;
-        }
-        Card card = importer.importCards(filePath);
-        if (card != null) {
-            System.out.println(card);
-            saveCardToBinary(card);
-            System.out.println();
-        }
-        return card;
-    }
+    public static void updateSkills(Card card, boolean flag) throws IOException {
+        if(card.getEvolvesFrom() != null)
+            updateSkills(card.getEvolvesFrom(), flag);
+        PkmnHttpClient pkmnHttpClient = new PkmnHttpClient();
+        JsonNode card_jn = pkmnHttpClient.getPokemonCard(card.getName(), card.getNumber());
+        if (flag)
+            System.out.println(card_jn.toPrettyString());
 
-    private static void saveCardToBinary(Card card) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(card.getName() + ".crd"))) {
-            oos.writeObject(card);
-        } catch (IOException e) {
-            System.err.println("Ошибка при сохранении карты в бинарный файл: " + e.getMessage());
-        }
-    }
 
-    private static void loadCardFromBinary(String fileName) {
-        File file = new File(fileName);
-        if (!file.exists()) {
-            System.err.println("Файл не найден: " + fileName);
-            return;
-        }
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
-            Card card = (Card) ois.readObject();
-            System.out.println(card);
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("Ошибка при чтении карты из бинарного файла: " + e.getMessage());
-        }
-    }
+        Stream<JsonNode> stream = card_jn.findValues("attacks").stream();
+        JsonNode attacks = stream.toList().getFirst();
 
-    private static String readLinkFromMainCard(String filePath) {
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            for (int i = 0; i < 5; i++) {
-                line = br.readLine();
-                if (i == 4 && line != null) {
-                    return line;
+        for(JsonNode attack : attacks) {
+            for(AttackSkill skill : card.getSkills()) {
+                if(skill.getName().equals(attack.findValue("name").asText())) {
+                    skill.setDescription(attack.findValue("text").asText());
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Ошибка при чтении файла: " + e.getMessage());
         }
-        return null;
+        stream.close();
     }
 }

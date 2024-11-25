@@ -2,15 +2,13 @@ package ru.mirea.pkmn;
 
 import java.io.Serializable;
 
-public class Student implements Serializable {
-
+public class Student  implements Serializable {
     private static final long serialVersionUID = 1L;
     private String firstName;
     private String surName;
     private String familyName;
     private String group;
 
-    // Конструктор
     public Student(String firstName, String surName, String familyName, String group) {
         this.firstName = firstName;
         this.surName = surName;
@@ -18,7 +16,11 @@ public class Student implements Serializable {
         this.group = group;
     }
 
-    // Геттеры и сеттеры
+    @Override
+    public String toString() {
+        return firstName + " / " + surName + " / " + familyName + " / " + group;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -49,11 +51,5 @@ public class Student implements Serializable {
 
     public void setGroup(String group) {
         this.group = group;
-    }
-
-    // Метод для вывода информации о студенте
-    @Override
-    public String toString() {
-        return String.format("%s / %s / %s / %s", firstName, surName, familyName, group);
     }
 }

@@ -1,11 +1,20 @@
 package ru.mirea.pkmn;
 
 public enum PokemonStage {
-    BASIC, STAGE1, STAGE2, VSTAR, VMAX;
+    BASIC("BASIC"),
+    STAGE1("STAGE1"),
+    STAGE2("STAGE2"),
+    VSTAR("VSTAR"),
+    VMAX("VMAX");
 
-    // Переопределение метода toString для вывода стадии в виде строки
+    private String stage;
+
+    PokemonStage(String stage) {
+        this.stage = stage;
+    }
+
     @Override
     public String toString() {
-        return name(); // Возвращаем имя константы
+        return stage;
     }
 }
